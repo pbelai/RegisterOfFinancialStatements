@@ -6,7 +6,7 @@
 #'
 #' @return `list` with the read data.
 getObjectFromURL <- function(url) {
-  jsonlite::fromJSON(readLines(url, warn = FALSE))
+  jsonlite::fromJSON(readLines(url, warn = FALSE, encoding = "UTF-8"))
 }
 
 #' Create query
