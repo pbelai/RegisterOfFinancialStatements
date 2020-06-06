@@ -1,9 +1,24 @@
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
 toCharDF <- function(x) {
-  x %>%
-    apply(2, as.character) %>%
-    as.data.frame(stringsAsFactors = FALSE)
+  x[] <- lapply(x, as.character)
+  x
 }
 
-addDayToDate <- function(x) {
-  paste0(x, "-01")
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
+addDayToDate <- function(x, day = "01") {
+  paste(x, day, sep = "-")
 }

@@ -1,33 +1,3 @@
-DB_CONNECTION <- NULL
-
-#' Get DB connection
-#'
-#' Returns existing DB connection, if the connection does not exist yet, it is created.
-#'
-#' @return DB connection
-getDBConnection <- function() {
-  db <- "postgres"
-  host_db <- "127.0.0.1"
-  db_port <- "5432"
-  db_user <- "postgres"
-  db_password <- "admin"
-  if (is.null(DB_CONNECTION)) {
-    message("Opening new DB connection")
-    DB_CONNECTION <<-
-      DBI::dbConnect(
-        RPostgres::Postgres(),
-        dbname = db,
-        host = host_db,
-        port = db_port,
-        user = db_user,
-        password = db_password
-      )
-  }
-
-  DB_CONNECTION
-}
-
-
 #' Append new accounting entity data
 #'
 #' @param accEntity
@@ -43,11 +13,12 @@ appendAccountingEntity <- function(accEntity) {
     setNames(tolower(names(.)))
 
 
-  financialStatementsIDs <- accEntity$iductovnychzavierok
+  financialStatementsIDs <- as.character(accEntity$iductovnychzavierok)
+  accEntity$id_accounting_entity <- as.character(accEntity$id_accounting_entity)
 
   finStatementsForAccEntitiy <- data.frame(
-      id_accounting_entity = as.character(accEntity$id_accounting_entity),
-      id_financial_statement = as.character(financialStatementsIDs),
+      id_accounting_entity = accEntity$id_accounting_entity,
+      id_financial_statement = financialStatementsIDs,
       stringsAsFactors = FALSE
     )
 
@@ -99,17 +70,40 @@ appendFinancialStatement <- function(finStatement) {
 }
 
 
-appendIfMissing <- function(x, tableName, con) {
-  whereStatement <- lapply(names(x), function(name) {
-    glue::glue_sql("{`name`} NOT IN ({x[[name]]*})", .con = con)
-  }) %>% unlist() %>% glue::glue_collapse(sep = " OR ")
+#' Title
+#'
+#' @param finReport
+#'
+#' @return
+#' @export
+#'
+#' @examples
+appendFinancialReport <- function(finReport) {
+  .appendType <-
+    function(x, finReportTitle) {
+      if (finReportTitle$type == "MUJ")
+        paste0(x, "_muj")
+      else
+        paste0(x, "_pod")
+    }
+  con <- getDBConnection()
+  finReportBase <- getBaseFinReport(finReport)
+  finReportTitle <- getTitleFinReport(finReport)
+  finReportsForFinStatement <- data.frame(
+    id_financial_report = finReport$id,
+    id_financial_statement = finReport$idUctovnejZavierky,
+    stringsAsFactors = FALSE
+  )
 
-  res <- glue::glue_sql(paste("SELECT * FROM {`tableName`} WHERE", whereStatement), .con = con) %>%
-    RPostgres::dbGetQuery(con, .)
-
-  toAppend <- dplyr::left_join(x, res[names(x)], by = names(x))
-  if (nrow(toAppend) > 0) {
-    message("Appending missing values to table: ", tableName)
-    RPostgres::dbAppendTable(con, tableName, toAppend, row.names = NULL)
-  }
+  RPostgres::dbBegin(con)
+  appendIfMissing(finReportBase, "financial_report_base", con)
+  appendIfMissing(finReportTitle, "financial_report_title", con)
+  appendIfMissing(finReportsForFinStatement, "financial_report_for_financial_statement", con)
+  appendIfMissing(getAktivaFinReport(finReport), .appendType("financial_report_assets", finReportTitle), con)
+  appendIfMissing(getPasivaFinReport(finReport), .appendType("financial_report_lae", finReportTitle), con)
+  appendIfMissing(getZSFinReport(finReport), .appendType("financial_report_is", finReportTitle), con)
+  RPostgres::dbCommit(con)
 }
+
+
+

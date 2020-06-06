@@ -6,7 +6,7 @@
 #'
 #' @return `list` with the read data.
 getObjectFromURL <- function(url) {
-  jsonlite::fromJSON(readLines(url, warn = FALSE, encoding = "UTF-8"))
+  rjson::fromJSON(readLines(url, warn = FALSE, encoding = "UTF-8"))
 }
 
 #' Create query
@@ -38,7 +38,7 @@ createUrl <- function(endpoint, ..., baseUrl = "http://www.registeruz.sk/cruz-pu
 #'
 #' @return `object`
 #' @examples
-tryUntilSuccess <- function(url, numberOfTries = 20, fun = rvest::html) {
+tryUntilSuccess <- function(url, numberOfTries = 20, fun = xml2::read_html) {
   if (numberOfTries == 0) {
     warning("Unable to read from: ", url)
     NULL
