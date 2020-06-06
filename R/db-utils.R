@@ -45,11 +45,11 @@ appendIfMissing <- function(x, tableName, con) {
 
   res <- glue::glue_sql(paste("SELECT * FROM {`tableName`}"), .con = con) %>%
     RPostgres::dbGetQuery(con, .)
-
+  names(x) <- tolower(names(x))
   toAppend <- dplyr::anti_join(toCharDF(x), toCharDF(res[names(x)]), by = names(x))
 
   if (nrow(toAppend) > 0) {
     nrOfAppendedRows <- RPostgres::dbAppendTable(con, tableName, toAppend, row.names = NULL)
-    message("Appended missing values to table: ", nrOfAppendedRows)
+    usethis::ui_info("Appended missing values to table: ", nrOfAppendedRows)
   }
 }

@@ -6,7 +6,8 @@
 #'
 #' @return `list` with the read data.
 getObjectFromURL <- function(url) {
-  rjson::fromJSON(readLines(url, warn = FALSE, encoding = "UTF-8"))
+  readLines(url, warn = FALSE, encoding = "UTF-8") %>%
+    rjson::fromJSON()
 }
 
 #' Create query
@@ -38,7 +39,7 @@ createUrl <- function(endpoint, ..., baseUrl = "http://www.registeruz.sk/cruz-pu
 #'
 #' @return `object`
 #' @examples
-tryUntilSuccess <- function(url, numberOfTries = 20, fun = xml2::read_html) {
+tryUntilSuccess <- function(url, numberOfTries = 20, fun = getObjectFromURL) {
   if (numberOfTries == 0) {
     warning("Unable to read from: ", url)
     NULL

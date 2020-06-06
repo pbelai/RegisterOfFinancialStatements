@@ -86,23 +86,34 @@ appendFinancialReport <- function(finReport) {
       else
         paste0(x, "_pod")
     }
+  message("Process report:", finReport$id)
+
   con <- getDBConnection()
   finReportBase <- getBaseFinReport(finReport)
   finReportTitle <- getTitleFinReport(finReport)
+  if (!is.null(finReportTitle$type)) {
+
   finReportsForFinStatement <- data.frame(
     id_financial_report = finReport$id,
     id_financial_statement = finReport$idUctovnejZavierky,
     stringsAsFactors = FALSE
   )
 
-  RPostgres::dbBegin(con)
-  appendIfMissing(finReportBase, "financial_report_base", con)
-  appendIfMissing(finReportTitle, "financial_report_title", con)
-  appendIfMissing(finReportsForFinStatement, "financial_report_for_financial_statement", con)
-  appendIfMissing(getAktivaFinReport(finReport), .appendType("financial_report_assets", finReportTitle), con)
-  appendIfMissing(getPasivaFinReport(finReport), .appendType("financial_report_lae", finReportTitle), con)
-  appendIfMissing(getZSFinReport(finReport), .appendType("financial_report_is", finReportTitle), con)
-  RPostgres::dbCommit(con)
+  message("Add report with id:", finReport$id)
+    tryCatch(
+      {
+        RPostgres::dbBegin(con)
+        appendIfMissing(finReportBase, "financial_report_base", con)
+        appendIfMissing(finReportTitle, "financial_report_title", con)
+        appendIfMissing(finReportsForFinStatement, "financial_report_for_financial_statement", con)
+        appendIfMissing(getAktivaFinReport(finReport), .appendType("financial_report_assets", finReportTitle), con)
+        appendIfMissing(getPasivaFinReport(finReport), .appendType("financial_report_lae", finReportTitle), con)
+        appendIfMissing(getZSFinReport(finReport), .appendType("financial_report_is", finReportTitle), con)
+        RPostgres::dbCommit(con)
+      },
+      error = function(e) {RPostgres::dbRollback(con)}
+    )
+  }
 }
 
 

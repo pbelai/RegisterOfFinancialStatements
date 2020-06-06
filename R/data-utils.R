@@ -7,7 +7,9 @@
 #'
 #' @examples
 getBaseFinReport <- function(finReport) {
-  finReport[!names(finReport) %in% c("prilohy", "obsah")] %>% as.data.frame(stringsAsFactors = FALSE)
+  finReport[!names(finReport) %in% c("prilohy", "obsah", "idUctovnejZavierky", "id")] %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
+    cbind(id_financial_report = finReport$id)
 }
 
 
@@ -23,11 +25,14 @@ getTitleFinReport <- function(finReport) {
   .normalizeDate <- function(x) {
     if (!is.null(x) && !is.na(x)) addDayToDate(x) else x
   }
+
+  ncol(getAktivaFinReport(finReport))
+
   title <- finReport$obsah$titulnaStrana
   title$adresa <- paste(title$adresa, collapse = " ")
-  if (is.null(title$typUctovnejJednotky)) {
+  if (ncol(getAktivaFinReport(finReport)) == 47) {
     title$type <- "MUJ"
-  } else {
+  } else if (ncol(getAktivaFinReport(finReport)) == 313){
     title$type <- "POD"
   }
 
