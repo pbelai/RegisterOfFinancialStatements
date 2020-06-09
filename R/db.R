@@ -1,11 +1,10 @@
-#' Append new accounting entity data
+#' Append accouniting entity to database
 #'
-#' @param accEntity
+#' Append accouniting entity to database. Also appends data to junction table.
 #'
-#' @return
-#' @export
+#' @param accEntity `data.frame` with accounting entity info.
 #'
-#' @examples
+#' @return `NULL`
 appendAccountingEntity <- function(accEntity) {
   con <- getDBConnection()
   accEntity <- as.data.frame(accEntity, stringsAsFactors = FALSE) %>%
@@ -31,14 +30,13 @@ appendAccountingEntity <- function(accEntity) {
 }
 
 
-#' Append new financial statement data
+#' Append financial statement to database
 #'
-#' @param variables
+#' Append financial statement to database. Also appends data to junction table.
 #'
-#' @return
-#' @export
+#' @param finStatement `data.frame` with financial statement info.
 #'
-#' @examples
+#' @return `NULL`
 appendFinancialStatement <- function(finStatement) {
   con <- getDBConnection()
   finStatement <- as.data.frame(finStatement, stringsAsFactors = FALSE) %>%
@@ -70,14 +68,13 @@ appendFinancialStatement <- function(finStatement) {
 }
 
 
-#' Title
+#' Append financial report to database
 #'
-#' @param finReport
+#' Append financial report to database. Also appends data to junction table.
 #'
-#' @return
-#' @export
+#' @param finReport `data.frame` with financial statement info.
 #'
-#' @examples
+#' @return `NULL`
 appendFinancialReport <- function(finReport) {
   .appendType <-
     function(x, finReportTitle) {

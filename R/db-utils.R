@@ -28,16 +28,15 @@ getDBConnection <- function() {
 }
 
 
-#' Title
+#' Append data if missing
 #'
-#' @param x
-#' @param tableName
-#' @param con
+#' Append missing data to database.
 #'
-#' @return
-#' @export
+#' @param x `data.frame` to append.
+#' @param tableName `character` name of the table where to append.
+#' @param con database connection
 #'
-#' @examples
+#' @return `NULL`
 appendIfMissing <- function(x, tableName, con) {
   whereStatement <- lapply(names(x), function(name) {
     glue::glue_sql("{`name`} NOT IN ({x[[name]]*})", .con = con)

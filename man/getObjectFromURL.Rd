@@ -7,11 +7,11 @@
 getObjectFromURL(url)
 }
 \arguments{
-\item{url}{`character` from where the data should be read.}
+\item{url}{\code{character} from where the data should be read.}
 }
 \value{
-`list` with the read data.
+\code{list} with the read data.
 }
 \description{
-Read lines from the URL and returns results as `list`.
+Read lines from the URL and returns results as \code{list}.
 }

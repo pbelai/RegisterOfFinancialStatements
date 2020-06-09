@@ -7,14 +7,14 @@
 createUrl(endpoint, ..., baseUrl = "http://www.registeruz.sk/cruz-public/api")
 }
 \arguments{
-\item{endpoint}{`character` endpoint.}
+\item{endpoint}{\code{character} endpoint.}
 
 \item{...}{params that should be sent to endpoint}
 
-\item{baseUrl}{`character` base url of the API.}
+\item{baseUrl}{\code{character} base url of the API.}
 }
 \value{
-`character` url.
+\code{character} url.
 }
 \description{
 Creates query from the endpoints and parameters.

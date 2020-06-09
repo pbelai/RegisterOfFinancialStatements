@@ -38,7 +38,6 @@ createUrl <- function(endpoint, ..., baseUrl = "http://www.registeruz.sk/cruz-pu
 #' @param fun `function` used for quering.
 #'
 #' @return `object`
-#' @examples
 tryUntilSuccess <- function(url, numberOfTries = 20, fun = getObjectFromURL) {
   if (numberOfTries == 0) {
     warning("Unable to read from: ", url)

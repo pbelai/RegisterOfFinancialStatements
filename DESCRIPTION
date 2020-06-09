@@ -16,3 +16,4 @@ Imports: rjson,
 RoxygenNote: 7.1.0
 Suggests: 
     testthat (>= 2.1.0)
+Roxygen: list(markdown = TRUE)
