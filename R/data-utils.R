@@ -52,6 +52,11 @@ getTitleFinReport <- function(finReport) {
 #'
 #' @return `data.frame` with the subsetted data.
 getNumericReportData <- function(finReport, position) {
+  if (is.null(finReport$obsah$tabulky) ||
+      length(finReport$obsah$tabulky) < position ||
+      is.null(finReport$obsah$tabulky[[position]]$data)) {
+    return(data.frame())
+  }
   finReport$obsah$tabulky[[position]]$data %>%
     as.numeric() %>%
     t() %>%

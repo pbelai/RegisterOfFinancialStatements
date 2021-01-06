@@ -8,7 +8,7 @@
 #'
 #' @return `list` with changed records.
 getChangedAccountingEntities <- function(from = "2019-01-01", maxNumber = 10000, afterId = 1) {
-  createUrl("/uctovne-jednotky", "zmenene-od" = from, "max-zaznamov" = maxNumber, "pokracovat-za-id" = afterId) %>%
+  createUrl("/uctovne-jednotky", "zmenene-od" = from, "max-zaznamov" = maxNumber, "pokracovat-za-id" = format(afterId, scientific = FALSE)) %>%
     tryUntilSuccess()
 }
 
@@ -20,7 +20,7 @@ getChangedAccountingEntities <- function(from = "2019-01-01", maxNumber = 10000,
 #'
 #' @return  with changed records.
 getChangedFinancialStatements <- function(from = "2019-01-01", maxNumber = 10000, afterId = 1) {
-  createUrl("/uctovne-zavierky", "zmenene-od" = from, "max-zaznamov" = maxNumber, "pokracovat-za-id" = afterId) %>%
+  createUrl("/uctovne-zavierky", "zmenene-od" = from, "max-zaznamov" = maxNumber, "pokracovat-za-id" = format(afterId, scientific = FALSE)) %>%
     tryUntilSuccess()
 }
 
@@ -32,7 +32,7 @@ getChangedFinancialStatements <- function(from = "2019-01-01", maxNumber = 10000
 #'
 #' @return with changed records.
 getChangedFinancialReports <- function(from = "2019-01-01", maxNumber = 10000, afterId = 1) {
-  createUrl("/uctovne-vykazy", "zmenene-od" = from, "max-zaznamov" = maxNumber, "pokracovat-za-id" = afterId) %>%
+  createUrl("/uctovne-vykazy", "zmenene-od" = from, "max-zaznamov" = maxNumber, "pokracovat-za-id" = format(afterId, scientific = FALSE)) %>%
     tryUntilSuccess()
 }
 
@@ -44,7 +44,7 @@ getChangedFinancialReports <- function(from = "2019-01-01", maxNumber = 10000, a
 #'
 #' @return `list` with details.
 getAccountingEntityDetails <- function(id) {
-  createUrl("/uctovna-jednotka", id = id) %>%
+  createUrl("/uctovna-jednotka", id = format(id, scientific = FALSE)) %>%
     tryUntilSuccess()
 }
 
@@ -56,7 +56,7 @@ getAccountingEntityDetails <- function(id) {
 #'
 #' @return `list` with details.
 getFinancialStatementDetails <- function(id) {
-  createUrl("/uctovna-zavierka", id = id) %>%
+  createUrl("/uctovna-zavierka", id = format(id, scientific = FALSE)) %>%
     tryUntilSuccess()
 }
 
@@ -68,6 +68,6 @@ getFinancialStatementDetails <- function(id) {
 #'
 #' @return `list` with details.
 getFinancialReportDetails <- function(id) {
-  createUrl("/uctovny-vykaz", id = id) %>%
+  createUrl("/uctovny-vykaz", id = format(id, scientific = FALSE)) %>%
     tryUntilSuccess()
 }
